@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react';
 import { getPosts } from './Action/Posts'
 
 function App() {
-  const [currentId, setCurrentId] = useState(null)
+  const [currentId, setCurrentId] = useState(0)
   const classes = useStyles()
   const dispatch = useDispatch();
 
@@ -25,7 +25,7 @@ function App() {
       </AppBar>
       <Grow in>
         <Container>
-          <Grid container justify="space-between" alignItems="stretch" spacing={3}>
+          <Grid container className={classes.mainContainer} justify="space-between" alignItems="stretch" spacing={3}>
             <Grid item xs={12} sm={7}>
               <Posts setCurrentId={setCurrentId} />
             </Grid>
