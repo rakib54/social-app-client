@@ -9,27 +9,36 @@ import GoogleLogin from 'react-google-login';
 import Icon from './Icon'
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
+import { signin, signup } from '../../Action/Auth'
 
+const initialState = { firstName: '', lastName: '', email: '', password: '', confirmPassword: '' }
 const Auth = () => {
-    
-    const [isSignUp, setIsSignUp] = useState(true)
+    const [formData, setFormData] = useState(initialState)
+    const [isSignUp, setIsSignUp] = useState(false)
+    const [showPassword, setShowPassword] = useState(false)
+
     const classes = useStyles()
     const dispatch = useDispatch()
     const history = useHistory()
 
-    const [showPassword, setShowPassword] = useState(false)
 
-    const handleSubmit = () => {
-
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        if (isSignUp) {
+            dispatch(signup(formData, history))
+        } else {
+            dispatch(signin(formData, history))
+        }
     }
-    const handleChange = () => {
-
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value })
     }
     const handleShowPassword = () => setShowPassword((showPass) => !showPass)
 
     const switchMode = () => {
+        setFormData(initialState)
         setIsSignUp((toggle) => !toggle)
-        handleShowPassword(false)
+        setShowPassword(false)
     }
     const googleSuccess = async (res) => {
         const result = res?.profileObj
@@ -59,13 +68,13 @@ const Auth = () => {
                             isSignUp && (
                                 <>
                                     <Input name="firstName" label="First Name" handleChange={handleChange} half />
-                                    <Input name="firstName" label="Last Name" handleChange={handleChange} half />
+                                    <Input name="lastName" label="Last Name" handleChange={handleChange} half />
                                 </>
                             )
                         }
                         <Input name="email" label="Email" handleChange={handleChange} type="email" />
                         <Input name="password" label="Password" handleChange={handleChange} type={showPassword ? 'text' : 'password'} handleShowPassword={handleShowPassword} />
-                        {isSignUp && <Input name="confirmPassword" label="Confirm Password" handleChange={handleChange} />}
+                        {isSignUp && <Input name="confirmPassword" label="Confirm Password" handleChange={handleChange} type={showPassword ? 'text' : 'password'}/>}
                     </Grid>
 
 
